@@ -17,9 +17,6 @@ function App() {
     load();
   }, []);
 
-  console.log(coinData);
-  console.log(dbData);
-
   return (
     <div className="w-screen h-screen bg-gray-100">
       <div className="w-full flex mx-auto bg-white flex-col h-full">
@@ -48,19 +45,25 @@ function App() {
                 </div>
 
                 <div className="flex flex-col px-10">
-                  {dbData.map((el) => (
-                    <>
-                      <h4>
-                        {el.TokenId === item.id ? el.Quantity : 0} {item.symbol}
-                      </h4>
-                      <p>
-                        $
-                        {el.TokenId === item.id
-                          ? el.Quantity * item.quote.USD.price
-                          : 0}
-                      </p>
-                    </>
-                  ))}
+                  {(() => {
+                    const quantity =
+                      dbData.find(
+                        (el) => el.TokenId.toString() === item.id.toString()
+                      )?.Quantity || 0;
+                    return (
+                      <>
+                        <h4>
+                          {quantity} {item.symbol}
+                        </h4>
+                        <p>
+                          $
+                          {(
+                            Number(quantity) * Number(item.quote.USD.price)
+                          ).toFixed(2)}
+                        </p>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
             </Link>
